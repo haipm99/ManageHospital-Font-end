@@ -32,7 +32,7 @@ class home extends Component {
             .then(res => {
                 console.log(res.data.arrEmp);
                 this.setState({
-                    data : res.data.arrEmp
+                    data: res.data.arrEmp
                 })
             }))
     }
@@ -44,21 +44,6 @@ class home extends Component {
                     rooms: res.data.rooms
                 })
             }))
-    }
-    setListEmp = (item, index) => {
-        const iteEmp = {
-            key: index,
-            name: item.fullName,
-            id: item.empID,
-            dob: item.dob,
-            sex: item.sex,
-            major: item.major,
-            position: item.position
-        };
-
-        this.setState({
-            data : [this.state.data,iteEmp]
-        })
     }
 
 
@@ -111,7 +96,11 @@ class home extends Component {
             <Layout style={{ width: '100%' }}>
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} className="side-bar-left">
                     <div className="logo">
-
+                        <Icon
+                            className="trigger"
+                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                            onClick={this.toggle}
+                        />
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                         {rooms}
@@ -131,7 +120,7 @@ class home extends Component {
                             padding: 24,
                             background: '#fff',
                             minHeight: 280,
-                            height:'90vh'
+                            height: '90vh'
                         }}>
                         <Table columns={columns} dataSource={data} />
                     </Content>

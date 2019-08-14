@@ -77,6 +77,7 @@ class home extends Component {
     changeGradeID = (gradeID) => {
         console.log(gradeID)
         this.getRoomOfGrade(gradeID);
+        // this.toggle()
     }
     render() {
         const columns = [
@@ -113,6 +114,7 @@ class home extends Component {
             }
         ];
         const data = this.state.data;
+        const arrTemp = [];
         // console.log(emp)
         const rooms = this.state.rooms.map((item, index) => {
             return (
@@ -122,14 +124,17 @@ class home extends Component {
                 </Menu.Item>
             )
         })
+        arrTemp.push(rooms);
+        console.log(arrTemp)
         const grades = this.state.grades.map((item, index) => {
             return (
                 <SubMenu
-                    onTitleMouseEnter={this.changeGradeID.bind(this, item._id)}
+                    onTitleClick={this.changeGradeID.bind(this, item._id)}
+                    // onTitleMouseLeave= {this.changeGradeID.bind(this,'0')}
                     key={index}
                     title={<span><Icon type="play-circle" />{item.gradeName}</span>}
                 >
-                    {rooms}
+                   {rooms}
                 </SubMenu>
             )
         })

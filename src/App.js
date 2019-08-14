@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/auth/login';
 import Home from './components/home/home';
+import '../src/App.css';
 class App extends Component {
   render() {
     return (

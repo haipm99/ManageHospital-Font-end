@@ -8,13 +8,15 @@ import 'antd/es/layout/style/css';
 import axios from 'axios';
 // import 'antd/es/s/style/css';
 const { Header, Content, Sider } = Layout;
-
+const { SubMenu } = Menu;
 class home extends Component {
     state = {
         collapsed: false,
         rooms: [],
-        roomID: '5d48f9d66d5ca0311c593504',
+        gradeID: '',
+        roomID: '',
         data: [],
+        grades: [],
     };
 
     toggle = () => {
@@ -23,8 +25,9 @@ class home extends Component {
         });
     };
     componentDidMount = () => {
+        this.getAllGrade();
         this.getAllRoom();
-        this.getEmpOfRoom(this.state.roomID);
+        // this.getEmpOfRoom(this.state.roomID);
     }
 
     getEmpOfRoom = (roomID) => {
@@ -36,7 +39,6 @@ class home extends Component {
                 })
             }))
     }
-
     getAllRoom = () => {
         return (axios.get('http://localhost:5000/api/room/getAllRoom')
             .then(res => {
@@ -45,8 +47,37 @@ class home extends Component {
                 })
             }))
     }
+    //get all grade
+    getAllGrade = () => {
+        return (axios.get('http://localhost:5000/api/grade/getAllGrade').then(res => {
+            this.setState({
+                grades: res.data.arrGrade
+            })
+        }))
+    }
+    //get room of grade 
+    getRoomOfGrade = (id) => {
+        return (axios.get(`http://localhost:5000/api/grade/getRoom/${id}`)
+            .then(res => {
+                this.setState({
+                    rooms: res.data.room
+                })
+            })
+        )
+    }
+    // change id room
+    changeRoomID = (roomID) => {
+        this.getEmpOfRoom(roomID);
+        this.setState({
+            roomID: roomID
+        });
+    }
 
-
+    // change id grade
+    changeGradeID = (gradeID) => {
+        console.log(gradeID)
+        this.getRoomOfGrade(gradeID);
+    }
     render() {
         const columns = [
             {
@@ -85,10 +116,21 @@ class home extends Component {
         // console.log(emp)
         const rooms = this.state.rooms.map((item, index) => {
             return (
-                <Menu.Item key={index + 1}>
+                <Menu.Item key={index + 1} onClick={this.changeRoomID.bind(this, item._id)}>
                     <Icon type="user" />
                     <span>{item.roomName}</span>
                 </Menu.Item>
+            )
+        })
+        const grades = this.state.grades.map((item, index) => {
+            return (
+                <SubMenu
+                    onTitleMouseEnter={this.changeGradeID.bind(this, item._id)}
+                    key={index}
+                    title={<span><Icon type="play-circle" />{item.gradeName}</span>}
+                >
+                    {rooms}
+                </SubMenu>
             )
         })
         return (
@@ -96,31 +138,26 @@ class home extends Component {
             <Layout style={{ width: '100%' }}>
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} className="side-bar-left">
                     <div className="logo">
-                        <Icon
-                            className="trigger"
-                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle}
-                        />
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        {rooms}
+                        {grades}
                     </Menu>
                 </Sider>
                 <Layout>
-                    {/* <Header style={{ background: '#fff', padding: 0 }}>
+                    <Header style={{ background: '#fff', padding: 0, height: '5vh' }}>
                         <Icon
                             className="trigger"
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle}
                         />
-                    </Header> */}
+                    </Header>
                     <Content
                         style={{
                             margin: '24px 16px',
                             padding: 24,
                             background: '#fff',
                             minHeight: 280,
-                            height: '90vh'
+                            height: '85vh'
                         }}>
                         <Table columns={columns} dataSource={data} />
                     </Content>

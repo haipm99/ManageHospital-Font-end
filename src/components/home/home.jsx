@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { Table } from 'antd';
+import { Input } from 'antd';
 //import css
 import '../home/home_css.css';
 import 'antd/es/layout/style/css';
 //import axios
 import axios from 'axios';
 // import 'antd/es/s/style/css';
+const { Search } = Input;
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 class home extends Component {
@@ -19,6 +21,7 @@ class home extends Component {
         grades: [],
         arrGradeID: [],
         arrRooms: [],
+        dataInit: [],
     };
 
     toggle = () => {
@@ -40,7 +43,8 @@ class home extends Component {
             .then(res => {
                 console.log(res.data.arrEmp);
                 this.setState({
-                    data: res.data.arrEmp
+                    data: res.data.arrEmp,
+                    dataInit: res.data.arrEmp
                 })
             }))
     }
@@ -97,6 +101,27 @@ class home extends Component {
             })
         })
     }
+    //live search
+    searchByChange = (keyword) => {
+        const arrName = [];
+        keyword = keyword.toUpperCase();
+        this.state.dataInit.forEach(emp => {
+            if (emp.fullName.includes(keyword)) {
+                arrName.push(emp)
+            }
+        })
+        console.log("arr nanme : ",arrName);
+        if (arrName.length > 0) {
+            this.setState({
+                data: [...arrName]
+            })
+        }
+        else {
+            this.setState({
+                data: []
+            })
+        }
+    }
     render() {
         const columns = [
             {
@@ -132,14 +157,6 @@ class home extends Component {
             }
         ];
         const data = this.state.data;
-        const rooms = this.state.rooms.map((item, index) => {
-            return (
-                <Menu.Item key={index + 1} onClick={this.changeRoomID.bind(this, item._id)}>
-                    <Icon type="user" />
-                    <span>{item.roomName}</span>
-                </Menu.Item>
-            )
-        })
         var room1 = [];
         var room2 = [];
         var room3 = [];
@@ -217,12 +234,13 @@ class home extends Component {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#fff', padding: 0, height: '5vh' }}>
+                    <Header style={{ background: '#fff', padding: 0, height: '7vh' }}>
                         <Icon
                             className="trigger"
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle}
                         />
+                        <Search style={{ width: '40vh', marginTop: '10px' }} placeholder="input search text" name="txtSearch" onSearch={value => this.searchByChange(value)} onChange={e => this.searchByChange(e.target.value)} enterButton />
                     </Header>
                     <Content
                         style={{
@@ -230,7 +248,7 @@ class home extends Component {
                             padding: 24,
                             background: '#fff',
                             minHeight: 280,
-                            height: '85vh'
+                            height: '80vh'
                         }}>
                         <Table columns={columns} dataSource={data} />
                     </Content>

@@ -17,6 +17,8 @@ class home extends Component {
         roomID: '',
         data: [],
         grades: [],
+        arrGradeID: [],
+        arrRooms: [],
     };
 
     toggle = () => {
@@ -25,8 +27,11 @@ class home extends Component {
         });
     };
     componentDidMount = () => {
-        this.getAllGrade();
-        this.getAllRoom();
+        this.getAllGrade().then(() => {
+
+            this.getRoomPerGrade();
+        });
+        // this.getAllRoom();
         // this.getEmpOfRoom(this.state.roomID);
     }
 
@@ -53,6 +58,11 @@ class home extends Component {
             this.setState({
                 grades: res.data.arrGrade
             })
+            this.state.grades.forEach(grade => {
+                this.setState({
+                    arrGradeID: [...this.state.arrGradeID, grade._id]
+                })
+            })
         }))
     }
     //get room of grade 
@@ -75,9 +85,17 @@ class home extends Component {
 
     // change id grade
     changeGradeID = (gradeID) => {
-        console.log(gradeID)
         this.getRoomOfGrade(gradeID);
         // this.toggle()
+    }
+    //get Room per grade
+    getRoomPerGrade = () => {
+        this.state.arrGradeID.forEach(async (id) => {
+            const a = await axios.get(`http://localhost:5000/api/grade/getRoom/${id}`);
+            this.setState({
+                arrRooms: [...this.state.arrRooms, a.data.room]
+            })
+        })
     }
     render() {
         const columns = [
@@ -114,8 +132,6 @@ class home extends Component {
             }
         ];
         const data = this.state.data;
-        const arrTemp = [];
-        // console.log(emp)
         const rooms = this.state.rooms.map((item, index) => {
             return (
                 <Menu.Item key={index + 1} onClick={this.changeRoomID.bind(this, item._id)}>
@@ -124,8 +140,6 @@ class home extends Component {
                 </Menu.Item>
             )
         })
-        arrTemp.push(rooms);
-        console.log(arrTemp)
         const grades = this.state.grades.map((item, index) => {
             return (
                 <SubMenu
@@ -134,7 +148,7 @@ class home extends Component {
                     key={index}
                     title={<span><Icon type="play-circle" />{item.gradeName}</span>}
                 >
-                   {rooms}
+                    {rooms}
                 </SubMenu>
             )
         })
@@ -168,7 +182,6 @@ class home extends Component {
                     </Content>
                 </Layout>
             </Layout>
-            // </div>
         );
     }
 }

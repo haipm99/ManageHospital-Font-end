@@ -140,18 +140,43 @@ class home extends Component {
                 </Menu.Item>
             )
         })
-        const grades = this.state.grades.map((item, index) => {
-            return (
-                <SubMenu
-                    onTitleClick={this.changeGradeID.bind(this, item._id)}
-                    // onTitleMouseLeave= {this.changeGradeID.bind(this,'0')}
-                    key={index}
-                    title={<span><Icon type="play-circle" />{item.gradeName}</span>}
-                >
-                    {rooms}
-                </SubMenu>
-            )
-        })
+        var room1 = [];
+        var room2 = [];
+        var room3 = [];
+        if (this.state.arrRooms[0]) {
+            room1 = this.state.arrRooms[0].map((item, index) => {
+                return (
+                    <Menu.Item key={index + 100} onClick={this.changeRoomID.bind(this, item._id)}>
+                        <Icon type="user" />
+                        <span>{item.roomName}</span>
+                    </Menu.Item>
+                )
+            })
+        }
+        if (this.state.arrRooms[1]) {
+            room2 = this.state.arrRooms[1].map((item, index) => {
+                return (
+                    <Menu.Item key={index + 200} onClick={this.changeRoomID.bind(this, item._id)}>
+                        <Icon type="user" />
+                        <span>{item.roomName}</span>
+                    </Menu.Item>
+                )
+            })
+        }
+        if (this.state.arrRooms[2]) {
+            room3 = this.state.arrRooms[2].map((item, index) => {
+                return (
+                    <Menu.Item key={index + 300} onClick={this.changeRoomID.bind(this, item._id)}>
+                        <Icon type="user" />
+                        <span>{item.roomName}</span>
+                    </Menu.Item>
+                )
+            })
+        }
+        const arrTempt = [];
+        arrTempt.push(room1);
+        arrTempt.push(room2);
+        arrTempt.push(room3);
         return (
             // <div className="container-home">
             <Layout style={{ width: '100%' }}>
@@ -159,7 +184,36 @@ class home extends Component {
                     <div className="logo">
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        {grades}
+                        <SubMenu
+                            key='1'
+                            title={<span><Icon type="play-circle" />{
+                                this.state.grades[0] ?
+                                    this.state.grades[0].gradeName
+                                    : null
+                            }</span>}
+                        >
+                            {arrTempt[0]}
+                        </SubMenu>
+                        <SubMenu
+                            key='2'
+                            title={<span><Icon type="play-circle" />{
+                                this.state.grades[1] ?
+                                    this.state.grades[1].gradeName
+                                    : null
+                            }</span>}
+                        >
+                            {arrTempt[1]}
+                        </SubMenu>
+                        <SubMenu
+                            key='3'
+                            title={<span><Icon type="play-circle" />{
+                                this.state.grades[2] ?
+                                    this.state.grades[2].gradeName
+                                    : null
+                            }</span>}
+                        >
+                            {arrTempt[2]}
+                        </SubMenu>
                     </Menu>
                 </Sider>
                 <Layout>

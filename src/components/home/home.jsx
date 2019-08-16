@@ -22,6 +22,7 @@ class home extends Component {
         arrGradeID: [],
         arrRooms: [],
         dataInit: [],
+        arrTempt2:[],
     };
 
     toggle = () => {
@@ -103,14 +104,18 @@ class home extends Component {
     }
     //get Room per grade
     getRoomPerGrade = () => {
-        this.state.arrGradeID.forEach((id) => {
-            console.log(id);
-            axios.get(`https://haipm99api.herokuapp.com/api/grade/getRoom/${id}`)
+        this.state.grades.forEach( (gr) => {
+             axios.get(`https://haipm99api.herokuapp.com/api/grade/getRoom/${gr._id}`)
                 .then(a => {
+                    console.log(gr._id)
+                    console.log(a.data.room)
                     this.setState({
                         arrRooms: [...this.state.arrRooms, a.data.room]
                     })
-                })
+                    this.setState({
+                        arrTempt2 :[...this.state.arrTempt2,gr]
+                    })
+                });
         })
     }
     //live search
@@ -215,8 +220,8 @@ class home extends Component {
                         <SubMenu
                             key='1'
                             title={<span><Icon type="play-circle" />{
-                                this.state.grades[0] ?
-                                    this.state.grades[0].gradeName
+                                this.state.arrTempt2[0] ?
+                                    this.state.arrTempt2[0].gradeName
                                     : null
                             }</span>}
                         >
@@ -225,8 +230,8 @@ class home extends Component {
                         <SubMenu
                             key='2'
                             title={<span><Icon type="play-circle" />{
-                                this.state.grades[1] ?
-                                    this.state.grades[1].gradeName
+                                this.state.arrTempt2[1] ?
+                                    this.state.arrTempt2[1].gradeName
                                     : null
                             }</span>}
                         >
@@ -235,8 +240,8 @@ class home extends Component {
                         <SubMenu
                             key='3'
                             title={<span><Icon type="play-circle" />{
-                                this.state.grades[2] ?
-                                    this.state.grades[2].gradeName
+                                this.state.arrTempt2[2] ?
+                                    this.state.arrTempt2[2].gradeName
                                     : null
                             }</span>}
                         >

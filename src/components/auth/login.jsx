@@ -21,7 +21,6 @@ class login extends Component {
         return (
             axios.post('https://haipm99api.herokuapp.com/api/account/login', data)
                 .then((res) => {
-                    console.log(res);
                     if (res.status === 200) {
                         localStorage.setItem('fullName', res.data.fullName);
                     }

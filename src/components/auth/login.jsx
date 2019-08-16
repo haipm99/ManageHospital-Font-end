@@ -19,7 +19,7 @@ class login extends Component {
 
     loginFunction = async (data) => {
         return (
-            axios.post('http://localhost:5000/api/account/login', data)
+            axios.post('https://haipm99api.herokuapp.com/api/account/login', data)
                 .then((res) => {
                     console.log(res);
                     if (res.status === 200) {

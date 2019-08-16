@@ -34,14 +34,11 @@ class home extends Component {
 
             this.getRoomPerGrade();
         });
-        // this.getAllRoom();
-        // this.getEmpOfRoom(this.state.roomID);
     }
 
     getEmpOfRoom = (roomID) => {
-        return (axios.get(`http://localhost:5000/api/room/getEmpRoom/${roomID}`)
+        return (axios.get(`https://haipm99api.herokuapp.com/api/room/getEmpRoom/${roomID}`)
             .then(res => {
-                console.log(res.data.arrEmp);
                 this.setState({
                     data: res.data.arrEmp,
                     dataInit: res.data.arrEmp
@@ -58,10 +55,10 @@ class home extends Component {
     }
     //get all grade
     getAllGrade = () => {
-        return (axios.get('http://localhost:5000/api/grade/getAllGrade').then(res => {
+        return (axios.get('https://haipm99api.herokuapp.com/api/grade/getAllGrade').then(res => {
             this.setState({
                 grades: res.data.arrGrade
-            })
+            });
             this.state.grades.forEach(grade => {
                 this.setState({
                     arrGradeID: [...this.state.arrGradeID, grade._id]
@@ -71,7 +68,7 @@ class home extends Component {
     }
     //get room of grade 
     getRoomOfGrade = (id) => {
-        return (axios.get(`http://localhost:5000/api/grade/getRoom/${id}`)
+        return (axios.get(`https://haipm99api.herokuapp.com/api/grade/getRoom/${id}`)
             .then(res => {
                 this.setState({
                     rooms: res.data.room
@@ -92,13 +89,28 @@ class home extends Component {
         this.getRoomOfGrade(gradeID);
         // this.toggle()
     }
+    //
+    getRoomCallBack = (id) => {
+        return (
+            axios.get(`https://haipm99api.herokuapp.com/api/grade/getRoom/${id}`)
+                .then(res => {
+                    this.setState({
+                        arrRooms: [...this.state.arrRooms, res.data.room]
+                    })
+                })
+
+        )
+    }
     //get Room per grade
     getRoomPerGrade = () => {
-        this.state.arrGradeID.forEach(async (id) => {
-            const a = await axios.get(`http://localhost:5000/api/grade/getRoom/${id}`);
-            this.setState({
-                arrRooms: [...this.state.arrRooms, a.data.room]
-            })
+        this.state.arrGradeID.forEach((id) => {
+            console.log(id);
+            axios.get(`https://haipm99api.herokuapp.com/api/grade/getRoom/${id}`)
+                .then(a => {
+                    this.setState({
+                        arrRooms: [...this.state.arrRooms, a.data.room]
+                    })
+                })
         })
     }
     //live search
@@ -110,7 +122,6 @@ class home extends Component {
                 arrName.push(emp)
             }
         })
-        console.log("arr nanme : ",arrName);
         if (arrName.length > 0) {
             this.setState({
                 data: [...arrName]

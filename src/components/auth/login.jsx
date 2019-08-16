@@ -44,7 +44,7 @@ class login extends Component {
 
     render() {
         return (
-            <div className="main-container-login">
+            <div className="main-container-login" style={{width:'100%' , height : '100vh'}}>
                 <div className="login-box">
                     <Form onSubmit={this.onSubmit} className="login-form">
                         <Form.Item>
